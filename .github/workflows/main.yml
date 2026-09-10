@@ -23,8 +23,10 @@ jobs:
       with:
         node-version: 18
 
-    - name: Install Dependencies
-      run: npm install
+    - name: Install Dependencies & Sync
+      run: |
+        npm install
+        npx cap sync android
 
     - name: Build Android APK
       run: |
