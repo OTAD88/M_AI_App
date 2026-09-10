@@ -18,12 +18,36 @@
         .container {
             text-align: center;
         }
+        #loader {
+            margin-top: 15px;
+            font-size: 1.2rem;
+            letter-spacing: 2px;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <h2>root@M_AI_App:~# System Initialized</h2>
-        <p>جاري تحميل محرك الذكاء الاصطناعي والهندسة العكسية...</p>
+        <p>جاري تحميل محرك الذكاء الاصطناعي والهندسة العكسية ...</p>
+        <div id="loader">[ ساري التحميل... ]</div>
     </div>
+
+    <script>
+        // مصفوفة حركة بسيطة لضمان أن الشاشة تتحرك وليست جامدة
+        const spinner = ['/', '-', '\\', '|'];
+        let i = 0;
+        const loaderEl = document.getElementById('loader');
+        
+        const interval = setInterval(() => {
+            loaderEl.innerText = `[ ${spinner[i = (i + 1) % spinner.length]} ] جاري تفعيل المحرك المحلي...`;
+        }, 150);
+
+        // الانتقال التلقائي والسريع للواجهة الرئيسية بعد 2.5 ثانية
+        setTimeout(() => {
+            clearInterval(interval);
+            // يمكنك توجيه التطبيق هنا لواجهتك الرئيسية أو تحميل ملف الـ JS الأساسي
+            loaderEl.innerText = "[ تم الإقلاع بنجاح! ]";
+        }, 2500);
+    </script>
 </body>
 </html>
