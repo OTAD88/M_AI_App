@@ -22,5 +22,6 @@ gradle assembleRelease
 
 تُوقّع نسخة Release الحالية بمفتاح debug حتى تكون قابلة للتثبيت والاختبار. يلزم مفتاح إصدار خاص قبل النشر التجاري.
 
-
 Build pipeline: GitHub Actions (`.github/workflows/risala-android.yml`).
+
+Build trigger refreshed: 2026-11-10.
