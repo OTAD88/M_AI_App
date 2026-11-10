@@ -21,3 +21,6 @@ gradle assembleRelease
 - لا يوجد خادم أو إرسال رسائل عبر الإنترنت في هذه المرحلة.
 
 تُوقّع نسخة Release الحالية بمفتاح debug حتى تكون قابلة للتثبيت والاختبار. يلزم مفتاح إصدار خاص قبل النشر التجاري.
+
+
+Build pipeline: GitHub Actions (`.github/workflows/risala-android.yml`).
