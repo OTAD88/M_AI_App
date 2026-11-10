@@ -2,6 +2,7 @@ package com.otad.risala
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -61,6 +62,15 @@ private fun RisalaApp() {
     var readReceipts by remember { mutableStateOf(true) }
     var notifications by remember { mutableStateOf(true) }
     var onlineStatus by remember { mutableStateOf(true) }
+    var automaticTheme by remember { mutableStateOf(false) }
+
+    BackHandler(enabled = page != Page.CONTACTS) {
+        page = when (page) {
+            Page.CHAT, Page.PROFILE -> Page.CONTACTS
+            Page.APPEARANCE, Page.EDIT_PROFILE, Page.VERIFY, Page.PRIVACY, Page.NOTIFICATIONS, Page.LANGUAGE, Page.HELP -> Page.PROFILE
+            Page.CONTACTS -> Page.CONTACTS
+        }
+    }
 
     val scheme = if (darkMode) darkColorScheme(
         primary = accent, onPrimary = Color(0xFF17252B),
@@ -105,7 +115,9 @@ private fun RisalaApp() {
                         onApplyHex = {
                             parseHex(customHex)?.let { accent = it }
                         },
-                        onBack = { page = Page.PROFILE }
+                        onBack = { page = Page.PROFILE },
+                        automaticTheme = automaticTheme,
+                        onAutomaticTheme = { automaticTheme = it }
                     )
                     Page.EDIT_PROFILE -> EditProfilePage(
                         name = displayName,
@@ -212,6 +224,8 @@ private fun ContactsPage(
                 Text("${contacts.size} أشخاص", color = MaterialTheme.colorScheme.secondary, fontSize = 12.sp)
             }
             Spacer(Modifier.height(10.dp))
+            AssistChip(onClick = {}, label = { Text("الأصدقاء القريبون") }, leadingIcon = { Icon(Icons.Outlined.NearMe, null) })
+            Spacer(Modifier.height(8.dp))
             LazyColumn(verticalArrangement = Arrangement.spacedBy(10.dp), contentPadding = PaddingValues(bottom = 24.dp)) {
                 items(contacts) { contact ->
                     ContactCard(contact = contact, onClick = { onOpenChat(contact) })
@@ -223,6 +237,7 @@ private fun ContactsPage(
 
 @Composable
 private fun ContactCard(contact: Contact, onClick: () -> Unit) {
+    var menuExpanded by remember { mutableStateOf(false) }
     Card(
         modifier = Modifier.fillMaxWidth().clickable(onClick = onClick),
         shape = RoundedCornerShape(20.dp),
@@ -235,6 +250,14 @@ private fun ContactCard(contact: Contact, onClick: () -> Unit) {
             Column(Modifier.weight(1f)) {
                 Text(contact.name, fontWeight = FontWeight.SemiBold)
                 Text(contact.note, color = MaterialTheme.colorScheme.secondary, fontSize = 12.sp)
+            }
+            Box {
+                IconButton(onClick = { menuExpanded = true }) { Icon(Icons.Outlined.MoreVert, "خيارات الصديق") }
+                DropdownMenu(expanded = menuExpanded, onDismissRequest = { menuExpanded = false }) {
+                    DropdownMenuItem(text = { Text("كتم الصديق") }, leadingIcon = { Icon(Icons.Outlined.VolumeOff, null) }, onClick = { menuExpanded = false })
+                    DropdownMenuItem(text = { Text("حظر الصديق") }, leadingIcon = { Icon(Icons.Outlined.Block, null) }, onClick = { menuExpanded = false })
+                    DropdownMenuItem(text = { Text("حذف الصديق") }, leadingIcon = { Icon(Icons.Outlined.PersonRemove, null) }, onClick = { menuExpanded = false })
+                }
             }
             Icon(Icons.Outlined.ChevronLeft, null, tint = MaterialTheme.colorScheme.secondary)
         }
@@ -270,7 +293,7 @@ private fun ChatPage(contact: Contact, onBack: () -> Unit) {
                         Surface(
                             color = if (item.second) MaterialTheme.colorScheme.primary.copy(alpha = 0.28f) else MaterialTheme.colorScheme.surface,
                             shape = RoundedCornerShape(18.dp)
-                        ) { Text(item.first, Modifier.widthIn(max = 280.dp).padding(horizontal = 14.dp, vertical = 11.dp)) }
+                        ) { Column(Modifier.widthIn(max = 280.dp).padding(horizontal = 14.dp, vertical = 11.dp)) { Text(item.first); Text("المسافة: — م", fontSize = 10.sp, color = MaterialTheme.colorScheme.secondary) } }
                     }
                 }
             }
@@ -300,10 +323,10 @@ private fun ProfilePage(
             item {
                 Card(shape = RoundedCornerShape(22.dp), colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)) {
                     Column(Modifier.fillMaxWidth().padding(18.dp), horizontalAlignment = Alignment.CenterHorizontally) {
-                        Avatar("AM", 66)
+                        Box { Avatar("AM", 66); Icon(Icons.Outlined.PhotoCamera, "تغيير صورة الحساب", modifier = Modifier.align(Alignment.BottomEnd).background(MaterialTheme.colorScheme.surface, CircleShape).padding(4.dp)) }
                         Spacer(Modifier.height(10.dp))
                         Text(displayName, fontWeight = FontWeight.SemiBold, fontSize = 18.sp)
-                        Text("ST • 1024 0876", color = MaterialTheme.colorScheme.secondary, fontSize = 12.sp)
+                        Row(verticalAlignment = Alignment.CenterVertically) { Text("ST • 1024 0876", color = MaterialTheme.colorScheme.secondary, fontSize = 12.sp); IconButton(onClick = {}) { Icon(Icons.Outlined.ContentCopy, "نسخ المعرّف", modifier = Modifier.size(16.dp)) } }
                         Text("رسالة 1.0 · تواصل أقرب، بلا ضجيج", color = MaterialTheme.colorScheme.secondary, fontSize = 11.sp, modifier = Modifier.padding(top = 6.dp))
                         TextButton(onClick = onEdit) { Text("تعديل الملف الشخصي") }
                     }
@@ -324,13 +347,15 @@ private fun ProfilePage(
 @Composable
 private fun AppearancePage(
     darkMode: Boolean, onDarkMode: (Boolean) -> Unit, accent: Color, onAccent: (Color) -> Unit,
-    customHex: String, onHexChange: (String) -> Unit, onApplyHex: () -> Unit, onBack: () -> Unit
+    customHex: String, onHexChange: (String) -> Unit, onApplyHex: () -> Unit, onBack: () -> Unit,
+    automaticTheme: Boolean, onAutomaticTheme: (Boolean) -> Unit
 ) {
     val colors = listOf(Mist, Color(0xFFB9C8B3), Color(0xFFD6B9AF), Color(0xFFC3B9D8), Color(0xFFE0C98D), Color(0xFF9FC4C0))
     Scaffold(topBar = { TopAppBar(title = { Text("المظهر والألوان") }, navigationIcon = { IconButton(onClick = onBack) { Icon(Icons.Outlined.ArrowForward, "رجوع") } }) }) { padding ->
         Column(Modifier.fillMaxSize().padding(padding).padding(horizontal = 20.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
             Text("اجعل رسالة تشبهك", style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Medium)
             Text("لون هادئ ومساحة تشبهك.", color = MaterialTheme.colorScheme.secondary)
+            SettingToggle("التبديل التلقائي", "الانتقال بين الفاتح والداكن تلقائياً", automaticTheme, onAutomaticTheme)
             SettingToggle("الوضع الداكن", "راحة أكبر في الإضاءة المنخفضة", darkMode, onDarkMode)
             Text("لون الواجهة", fontWeight = FontWeight.SemiBold)
             Row(horizontalArrangement = Arrangement.spacedBy(14.dp)) {
@@ -357,7 +382,7 @@ private fun EditProfilePage(name: String, onNameChange: (String) -> Unit, onBack
             OutlinedTextField(name, onNameChange, label = { Text("الاسم المعروض") }, modifier = Modifier.fillMaxWidth(), singleLine = true)
             Card(colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)) {
                 Row(Modifier.fillMaxWidth().padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
-                    Avatar("AM", 46); Spacer(Modifier.width(12.dp))
+                    Box { Avatar("AM", 46); Icon(Icons.Outlined.PhotoCamera, "تغيير صورة الحساب", modifier = Modifier.align(Alignment.BottomEnd).background(MaterialTheme.colorScheme.surface, CircleShape).padding(3.dp)) }; Spacer(Modifier.width(12.dp))
                     Column { Text("معرّف رسالة"); Text("ST • 1024 0876", color = MaterialTheme.colorScheme.secondary, fontSize = 12.sp) }
                 }
             }
