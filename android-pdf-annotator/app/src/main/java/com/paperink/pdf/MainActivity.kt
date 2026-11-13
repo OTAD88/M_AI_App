@@ -44,6 +44,9 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -59,9 +62,12 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val database = AnnotationDatabase.get(this)
-        setContent { MaterialTheme(colorScheme = lightColorScheme(primary = Color(0xFF356B5D), background = Color(0xFFF4F3EF))) {
-            PaperInkApp(database)
-        } }
+        setContent {
+            var dark by remember { mutableStateOf(false) }
+            MaterialTheme(colorScheme = if (dark) darkColorScheme(primary = Color(0xFF8EC8B5)) else lightColorScheme(primary = Color(0xFF356B5D), background = Color(0xFFF4F3EF))) {
+                PaperInkApp(database, dark, onToggleTheme = { dark = !dark })
+            }
+        }
     }
 }
 
@@ -71,7 +77,12 @@ private val palette = listOf(
 )
 
 @Composable
-private fun PaperInkApp(db: AnnotationDatabase) {
+private fun PaperInkApp(db: AnnotationDatabase, darkTheme: Boolean, onToggleTheme: () -> Unit) {
+    var isArabic by remember { mutableStateOf(false) }
+    fun label(en: String, ar: String) = if (isArabic) ar else en
+    val screenBg = if (darkTheme) Color(0xFF151A18) else Color(0xFFF4F3EF)
+    val topSurface = if (darkTheme) Color(0xFF202724) else Color(0xFFFCFBF8)
+    val toolbarSurface = if (darkTheme) Color(0xFF252D29) else Color(0xFFEAE9E3)
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
     var uri by remember { mutableStateOf<Uri?>(null) }
@@ -146,10 +157,13 @@ private fun PaperInkApp(db: AnnotationDatabase) {
         persist(InkObject(UUID.randomUUID().toString(), "MARKER", listOf(point), color, width, 1f, ""))
     }
 
-    Column(Modifier.fillMaxSize().background(Color(0xFFF4F3EF))) {
-        Row(Modifier.fillMaxWidth().background(Color(0xFFFCFBF8)).padding(horizontal = 12.dp, vertical = 9.dp), verticalAlignment = Alignment.CenterVertically) {
-            Text("PaperInk", fontSize = 20.sp, fontWeight = FontWeight.Bold, color = Color(0xFF244E43))
+    CompositionLocalProvider(LocalLayoutDirection provides if (isArabic) LayoutDirection.Rtl else LayoutDirection.Ltr) {
+    Column(Modifier.fillMaxSize().background(screenBg)) {
+        Row(Modifier.fillMaxWidth().background(topSurface).padding(horizontal = 12.dp, vertical = 9.dp), verticalAlignment = Alignment.CenterVertically) {
+            Text("PaperInk", fontSize = 20.sp, fontWeight = FontWeight.Bold, color = if (darkTheme) Color(0xFFB8E0D2) else Color(0xFF244E43))
             Spacer(Modifier.weight(1f))
+            TextButton(onClick = { isArabic = !isArabic }) { Text(if (isArabic) "EN" else "عربي") }
+            TextButton(onClick = onToggleTheme) { Text(if (darkTheme) label("Light", "فاتح") else label("Dark", "داكن")) }
             IconButton(onClick = { openPdf.launch(arrayOf("application/pdf")) }) { Icon(Icons.Default.FileOpen, "Open PDF") }
             IconButton(onClick = { showMarkers = true }, enabled = uri != null) { Icon(Icons.Default.Bookmarks, "Important markers") }
             IconButton(onClick = { if (uri != null) savePdf.launch("PaperInk-annotated.pdf") }, enabled = uri != null) { Icon(Icons.Default.SaveAlt, "Export annotated PDF") }
@@ -159,15 +173,15 @@ private fun PaperInkApp(db: AnnotationDatabase) {
         if (uri == null) {
             Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text("Open a PDF to start writing", fontSize = 19.sp, fontWeight = FontWeight.SemiBold)
+                    Text(label("Open a PDF to start writing", "افتح ملف PDF للبدء"), fontSize = 19.sp, fontWeight = FontWeight.SemiBold)
                     Spacer(Modifier.height(12.dp))
-                    Button(onClick = { openPdf.launch(arrayOf("application/pdf")) }) { Icon(Icons.Default.FileOpen, null); Spacer(Modifier.width(8.dp)); Text("Choose PDF") }
-                    Text("Your original file stays unchanged.", color = Color.Gray, fontSize = 13.sp, modifier = Modifier.padding(top = 8.dp))
+                    Button(onClick = { openPdf.launch(arrayOf("application/pdf")) }) { Icon(Icons.Default.FileOpen, null); Spacer(Modifier.width(8.dp)); Text(label("Choose PDF", "اختر ملف PDF")) }
+                    Text(label("Your original file stays unchanged.", "الملف الأصلي لن يتغير."), color = Color.Gray, fontSize = 13.sp, modifier = Modifier.padding(top = 8.dp))
                 }
             }
         } else {
             if (showToolbar) {
-                Column(Modifier.fillMaxWidth().background(Color(0xFFEAE9E3)).padding(vertical = 6.dp)) {
+                Column(Modifier.fillMaxWidth().background(toolbarSurface).padding(vertical = 6.dp)) {
                     Row(Modifier.horizontalScroll(rememberScrollState()).padding(horizontal = 8.dp), verticalAlignment = Alignment.CenterVertically) {
                         listOf("PEN", "HIGHLIGHT", "ERASER", "SELECT", "LINE", "ARROW", "RECTANGLE", "CIRCLE", "MARKER", "PAN").forEach { name ->
                             FilterChip(selected = tool == name, onClick = { tool = name }, label = { Text(name.lowercase().replaceFirstChar { it.uppercase() }, fontSize = 11.sp) }, modifier = Modifier.padding(end = 5.dp))
@@ -185,10 +199,10 @@ private fun PaperInkApp(db: AnnotationDatabase) {
                             })
                         }
                         TextButton(onClick = { showCustomColor = true }) { Text("Custom", fontSize = 11.sp) }
-                        Text("Width", fontSize = 11.sp)
+                        Text(label("Width", "السُمك"), fontSize = 11.sp)
                         Slider(value = width, onValueChange = { width = it }, valueRange = .0015f.. .018f, modifier = Modifier.width(100.dp))
                         if (tool == "HIGHLIGHT") {
-                            Text("Opacity", fontSize = 11.sp)
+                            Text(label("Opacity", "الشفافية"), fontSize = 11.sp)
                             Slider(value = alpha, onValueChange = { alpha = it }, valueRange = .12f.. .65f, modifier = Modifier.width(90.dp))
                         }
                         IconButton(onClick = {
@@ -329,7 +343,7 @@ private fun PaperInkApp(db: AnnotationDatabase) {
             Row(Modifier.fillMaxWidth().background(Color(0xFFFCFBF8)).padding(horizontal = 16.dp, vertical = 8.dp), verticalAlignment = Alignment.CenterVertically) {
                 IconButton(onClick = { page = (page - 1).coerceAtLeast(0) }, enabled = page > 0) { Icon(Icons.Default.ArrowBack, "Previous page") }
                 Spacer(Modifier.weight(1f))
-                Text("Page ${page + 1} / $pageCount", fontWeight = FontWeight.Medium)
+                Text(label("Page ${page + 1} / $pageCount", "صفحة ${page + 1} من $pageCount"), fontWeight = FontWeight.Medium)
                 Spacer(Modifier.weight(1f))
                 IconButton(onClick = { page = (page + 1).coerceAtMost(pageCount - 1) }, enabled = page < pageCount - 1) { Icon(Icons.Default.ArrowForward, "Next page") }
             }
@@ -339,9 +353,9 @@ private fun PaperInkApp(db: AnnotationDatabase) {
     if (showMarkers) {
         AlertDialog(
             onDismissRequest = { showMarkers = false },
-            title = { Text("Important markers") },
+            title = { Text(label("Important markers", "العلامات المهمة")) },
             text = {
-                if (markerRows.isEmpty()) Text("No markers in this document yet.")
+                if (markerRows.isEmpty()) Text(label("No markers in this document yet.", "لا توجد علامات بعد."))
                 else LazyColumn(Modifier.heightIn(max = 420.dp)) {
                     items(markerRows) { row ->
                         val obj = runCatching { InkObject.fromJson(row.payload) }.getOrNull()
@@ -358,7 +372,7 @@ private fun PaperInkApp(db: AnnotationDatabase) {
                     }
                 }
             },
-            confirmButton = { TextButton(onClick = { showMarkers = false }) { Text("Close") } }
+            confirmButton = { TextButton(onClick = { showMarkers = false }) { Text(label("Close", "إغلاق")) } }
         )
     }
     if (markerNoteTarget != null) {
@@ -407,6 +421,8 @@ private fun PaperInkApp(db: AnnotationDatabase) {
             },
             dismissButton = { TextButton(onClick = { showCustomColor = false }) { Text("Cancel") } }
         )
+    }
+
     }
 
 }
