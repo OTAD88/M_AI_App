@@ -85,6 +85,7 @@ private fun PaperInkApp(db: AnnotationDatabase) {
     var showMarkers by remember { mutableStateOf(false) }
     var markerNoteTarget by remember { mutableStateOf<String?>(null) }
     var noteText by remember { mutableStateOf("") }
+    var markerEditColor by remember { mutableIntStateOf(0xFFFFC107.toInt()) }
     var scale by remember { mutableFloatStateOf(1f) }
     var pan by remember { mutableStateOf(Offset.Zero) }
     var draft by remember { mutableStateOf<List<InkPoint>>(emptyList()) }
@@ -331,7 +332,7 @@ private fun PaperInkApp(db: AnnotationDatabase) {
                                 Text(obj?.note?.ifBlank { "No note" } ?: "Marker", fontSize = 12.sp, color = Color.Gray)
                             }
                             TextButton(onClick = { page = row.pageIndex; showMarkers = false }) { Text("Go") }
-                            TextButton(onClick = { markerNoteTarget = row.id; noteText = obj?.note.orEmpty() }) { Text("Edit") }
+                            TextButton(onClick = { markerNoteTarget = row.id; noteText = obj?.note.orEmpty(); markerEditColor = obj?.color ?: 0xFFFFC107.toInt() }) { Text("Edit") }
                             IconButton(onClick = { saveSnapshot(); deleteRow(row) }) { Icon(Icons.Default.Delete, "Delete marker") }
                         }
                     }
@@ -345,14 +346,25 @@ private fun PaperInkApp(db: AnnotationDatabase) {
         AlertDialog(
             onDismissRequest = { markerNoteTarget = null },
             title = { Text("Edit paper flag") },
-            text = { TextField(value = noteText, onValueChange = { noteText = it }, label = { Text("Optional note") }, singleLine = true) },
+            text = {
+                Column {
+                    TextField(value = noteText, onValueChange = { noteText = it }, label = { Text("Optional note") }, singleLine = true)
+                    Row(Modifier.horizontalScroll(rememberScrollState()).padding(top = 12.dp)) {
+                        palette.forEach { swatch ->
+                            Box(Modifier.padding(end = 8.dp).size(26.dp).background(swatch, CircleShape)
+                                .then(if (markerEditColor == swatch.value.toLong().toInt()) Modifier.border(2.dp, Color.Black, CircleShape) else Modifier)
+                                .pointerInput(swatch) { detectTapGestures { markerEditColor = swatch.value.toLong().toInt() } })
+                        }
+                    }
+                }
+            },
             confirmButton = {
                 TextButton(onClick = {
                     if (targetRow != null) {
                         val obj = InkObject.fromJson(targetRow.payload)
                         saveSnapshot()
                         scope.launch(Dispatchers.IO) {
-                            db.annotations().upsert(targetRow.copy(payload = obj.copy(note = noteText.trim()).toJson()))
+                            db.annotations().upsert(targetRow.copy(payload = obj.copy(note = noteText.trim(), color = markerEditColor).toJson()))
                         }
                     }
                     markerNoteTarget = null
