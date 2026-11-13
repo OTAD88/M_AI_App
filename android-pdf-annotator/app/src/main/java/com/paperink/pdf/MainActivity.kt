@@ -331,7 +331,8 @@ private fun PaperInkApp(db: AnnotationDatabase) {
                                 Text(obj?.note?.ifBlank { "No note" } ?: "Marker", fontSize = 12.sp, color = Color.Gray)
                             }
                             TextButton(onClick = { page = row.pageIndex; showMarkers = false }) { Text("Go") }
-                            IconButton(onClick = { deleteRow(row) }) { Icon(Icons.Default.Delete, "Delete marker") }
+                            TextButton(onClick = { markerNoteTarget = row.id; noteText = obj?.note.orEmpty() }) { Text("Edit") }
+                            IconButton(onClick = { saveSnapshot(); deleteRow(row) }) { Icon(Icons.Default.Delete, "Delete marker") }
                         }
                     }
                 }
@@ -339,4 +340,26 @@ private fun PaperInkApp(db: AnnotationDatabase) {
             confirmButton = { TextButton(onClick = { showMarkers = false }) { Text("Close") } }
         )
     }
+    if (markerNoteTarget != null) {
+        val targetRow = rows.firstOrNull { it.id == markerNoteTarget }
+        AlertDialog(
+            onDismissRequest = { markerNoteTarget = null },
+            title = { Text("Edit paper flag") },
+            text = { TextField(value = noteText, onValueChange = { noteText = it }, label = { Text("Optional note") }, singleLine = true) },
+            confirmButton = {
+                TextButton(onClick = {
+                    if (targetRow != null) {
+                        val obj = InkObject.fromJson(targetRow.payload)
+                        saveSnapshot()
+                        scope.launch(Dispatchers.IO) {
+                            db.annotations().upsert(targetRow.copy(payload = obj.copy(note = noteText.trim()).toJson()))
+                        }
+                    }
+                    markerNoteTarget = null
+                }) { Text("Save") }
+            },
+            dismissButton = { TextButton(onClick = { markerNoteTarget = null }) { Text("Cancel") } }
+        )
+    }
+
 }
