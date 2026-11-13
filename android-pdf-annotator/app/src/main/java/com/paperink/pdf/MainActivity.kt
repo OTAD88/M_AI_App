@@ -11,6 +11,7 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.gestures.detectTransformGestures
@@ -86,6 +87,7 @@ private fun PaperInkApp(db: AnnotationDatabase) {
     var markerNoteTarget by remember { mutableStateOf<String?>(null) }
     var noteText by remember { mutableStateOf("") }
     var markerEditColor by remember { mutableIntStateOf(0xFFFFC107.toInt()) }
+    var selectedId by remember { mutableStateOf<String?>(null) }
     var scale by remember { mutableFloatStateOf(1f) }
     var pan by remember { mutableStateOf(Offset.Zero) }
     var draft by remember { mutableStateOf<List<InkPoint>>(emptyList()) }
@@ -171,7 +173,14 @@ private fun PaperInkApp(db: AnnotationDatabase) {
                     }
                     Row(Modifier.horizontalScroll(rememberScrollState()).padding(horizontal = 10.dp, vertical = 5.dp), verticalAlignment = Alignment.CenterVertically) {
                         palette.forEach { swatch ->
-                            Box(Modifier.padding(end = 8.dp).size(25.dp).background(swatch, CircleShape).then(if (color == swatch.value.toLong().toInt()) Modifier.border(2.dp, Color.Black, CircleShape) else Modifier).pointerInput(swatch) { detectTapGestures { color = swatch.value.toLong().toInt() } })
+                            Box(Modifier.padding(end = 8.dp).size(25.dp).background(swatch, CircleShape).then(if (color == swatch.value.toLong().toInt()) Modifier.border(2.dp, Color.Black, CircleShape) else Modifier).clickable {
+                                val chosen = swatch.value.toLong().toInt()
+                                color = chosen
+                                pageRows.firstOrNull { it.id == selectedId }?.let { row ->
+                                    val obj = runCatching { InkObject.fromJson(row.payload) }.getOrNull()
+                                    if (obj != null) { saveSnapshot(); deleteRow(row); persist(obj.copy(color = chosen)) }
+                                }
+                            })
                         }
                         Text("Width", fontSize = 11.sp)
                         Slider(value = width, onValueChange = { width = it }, valueRange = .0015f.. .018f, modifier = Modifier.width(100.dp))
@@ -252,11 +261,19 @@ private fun PaperInkApp(db: AnnotationDatabase) {
                                                         val obj = runCatching { InkObject.fromJson(row.payload) }.getOrNull()
                                                         obj != null && AnnotationGeometry.hitTest(obj, start, .03f)
                                                     }
-                                                    if (target != null && draft.size > 1) {
-                                                        val dx = draft.last().x - start.x; val dy = draft.last().y - start.y
-                                                        val obj = InkObject.fromJson(target.payload)
-                                                        saveSnapshot(); deleteRow(target)
-                                                        persist(obj.copy(points = obj.points.map { AnnotationGeometry.normalized(it.x + dx, it.y + dy) }))
+                                                    if (target != null) {
+                                                        selectedId = target.id
+                                                        if (draft.size > 1) {
+                                                            val dx = draft.last().x - start.x; val dy = draft.last().y - start.y
+                                                            val obj = InkObject.fromJson(target.payload)
+                                                            val endpoint = obj.points.lastOrNull()
+                                                            val resizeEndpoint = endpoint != null && kotlin.math.hypot((endpoint.x-start.x).toDouble(), (endpoint.y-start.y).toDouble()) < .045
+                                                            val moved = if (resizeEndpoint && obj.points.size >= 2) {
+                                                                obj.points.dropLast(1) + AnnotationGeometry.normalized(draft.last().x, draft.last().y)
+                                                            } else obj.points.map { AnnotationGeometry.normalized(it.x + dx, it.y + dy) }
+                                                            saveSnapshot(); deleteRow(target)
+                                                            persist(obj.copy(points = moved))
+                                                        }
                                                     }
                                                 }
                                                 else -> {
