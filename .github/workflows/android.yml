@@ -1,0 +1,55 @@
+name: Android PDF Annotator
+
+on:
+  push:
+    branches: [main, native-pdf-annotator]
+    tags: ["v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+      - name: Set up JDK 17
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "17"
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+        with:
+          packages: platform-tools
+      - name: Install Android platform
+        run: sdkmanager "platform-tools" "platforms;android-35" "build-tools;35.0.0"
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: "8.11.1"
+      - name: Run unit tests
+        working-directory: android-pdf-annotator
+        run: gradle :app:testDebugUnitTest
+      - name: Build debug APK
+        working-directory: android-pdf-annotator
+        run: gradle :app:assembleDebug
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: paperink-debug-apk
+          path: |
+            android-pdf-annotator/app/build/outputs/apk/debug/app-debug.apk
+            android-pdf-annotator/app/build/outputs/apk/release/app-release.apk
+          if-no-files-found: error
+          retention-days: 30
+      - name: Publish GitHub Release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            android-pdf-annotator/app/build/outputs/apk/debug/app-debug.apk
+            android-pdf-annotator/app/build/outputs/apk/release/app-release.apk
+          generate_release_notes: true
