@@ -207,7 +207,7 @@ private fun PaperInkApp(db: AnnotationDatabase) {
             BoxWithConstraints(Modifier.weight(1f).fillMaxWidth().padding(horizontal = 8.dp, vertical = 5.dp), contentAlignment = Alignment.Center) {
                 val bitmap = pageBitmap
                 if (bitmap != null) {
-                    val displayHeight = maxWidth * bitmap.height / bitmap.width
+                    val displayHeight = maxWidth * (bitmap.height.toFloat() / bitmap.width.toFloat())
                     Box(Modifier.width(maxWidth).height(displayHeight).background(Color.White).graphicsLayerCompat(scale, pan)) {
                         Image(bitmap.asImageBitmap(), contentDescription = "PDF page", modifier = Modifier.fillMaxSize())
                         Canvas(Modifier.fillMaxSize()
