@@ -332,9 +332,19 @@ private fun PaperInkApp(db: AnnotationDatabase, darkTheme: Boolean, onToggleThem
                                         drawRoundRect(Color(obj.color), Offset(p.x, p.y), androidx.compose.ui.geometry.Size(size.width*.055f, size.height*.038f), androidx.compose.ui.geometry.CornerRadius(5f))
                                         drawRect(Color.White.copy(alpha=.35f), Offset(p.x,p.y), androidx.compose.ui.geometry.Size(size.width*.055f,size.height*.007f))
                                     }
-                                    "RECTANGLE" -> if (pts.size >= 2) drawRect(c, pts[0], androidx.compose.ui.geometry.Size(pts[1].x-pts[0].x, pts[1].y-pts[0].y), style=stroke)
+                                    "RECTANGLE" -> if (pts.size >= 2) drawRect(c, Offset(minOf(pts[0].x, pts[1].x), minOf(pts[0].y, pts[1].y)), androidx.compose.ui.geometry.Size(kotlin.math.abs(pts[1].x-pts[0].x), kotlin.math.abs(pts[1].y-pts[0].y)), style=stroke)
                                     "CIRCLE" -> if (pts.size >= 2) drawOval(c, Offset(minOf(pts[0].x,pts[1].x),minOf(pts[0].y,pts[1].y)), androidx.compose.ui.geometry.Size(kotlin.math.abs(pts[1].x-pts[0].x),kotlin.math.abs(pts[1].y-pts[0].y)), style=stroke)
-                                    "LINE", "ARROW" -> if (pts.size >= 2) drawLine(c, pts[0], pts[1], stroke.width)
+                                    "LINE", "ARROW" -> if (pts.size >= 2) {
+                                        drawLine(c, pts[0], pts[1], stroke.width)
+                                        if (obj.kind == "ARROW") {
+                                            val angle = kotlin.math.atan2(pts[1].y - pts[0].y, pts[1].x - pts[0].x)
+                                            val head = (stroke.width * 4f).coerceAtLeast(10f)
+                                            val a = Offset(pts[1].x - head * kotlin.math.cos(angle - .45f).toFloat(), pts[1].y - head * kotlin.math.sin(angle - .45f).toFloat())
+                                            val b = Offset(pts[1].x - head * kotlin.math.cos(angle + .45f).toFloat(), pts[1].y - head * kotlin.math.sin(angle + .45f).toFloat())
+                                            drawLine(c, pts[1], a, stroke.width)
+                                            drawLine(c, pts[1], b, stroke.width)
+                                        }
+                                    }
                                     else -> if (pts.size >= 2) {
                                         val path = Path().apply { moveTo(pts[0].x,pts[0].y); pts.drop(1).forEach { lineTo(it.x,it.y) } }
                                         drawPath(path, c, style=stroke)
