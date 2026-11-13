@@ -43,6 +43,37 @@ data class InkObject(
 object AnnotationGeometry {
     fun normalized(x: Float, y: Float) = InkPoint(x.coerceIn(0f, 1f), y.coerceIn(0f, 1f))
 
+    fun erase(stroke: InkObject, eraserPath: List<InkPoint>, tolerance: Float): List<InkObject> {
+        if (stroke.points.isEmpty() || eraserPath.isEmpty()) return listOf(stroke)
+        val hit = BooleanArray(stroke.points.size)
+        if (stroke.points.size == 1) {
+            val p = stroke.points.first()
+            return if (eraserPath.any { hypot((p.x-it.x).toDouble(), (p.y-it.y).toDouble()) <= tolerance }) emptyList() else listOf(stroke)
+        }
+        for (i in 0 until stroke.points.lastIndex) {
+            val a = stroke.points[i]
+            val b = stroke.points[i + 1]
+            if (eraserPath.any { distanceToSegment(it, a, b) <= tolerance }) {
+                hit[i] = true
+                hit[i + 1] = true
+            }
+        }
+        if (hit.none { it }) return listOf(stroke)
+        if (stroke.kind !in listOf("PEN", "HIGHLIGHT")) return emptyList()
+        val fragments = mutableListOf<List<InkPoint>>()
+        var current = mutableListOf<InkPoint>()
+        stroke.points.forEachIndexed { index, point ->
+            if (hit[index]) {
+                if (current.size >= 2) fragments.add(current.toList())
+                current = mutableListOf()
+            } else current.add(point)
+        }
+        if (current.size >= 2) fragments.add(current.toList())
+        return fragments.mapIndexed { index, points ->
+            stroke.copy(id = if (index == 0) stroke.id else java.util.UUID.randomUUID().toString(), points = points)
+        }
+    }
+
     fun hitTest(stroke: InkObject, point: InkPoint, tolerance: Float): Boolean {
         if (stroke.points.isEmpty()) return false
         if (stroke.points.size == 1) {
