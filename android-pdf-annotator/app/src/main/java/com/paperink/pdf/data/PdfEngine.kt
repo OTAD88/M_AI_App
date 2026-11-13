@@ -5,6 +5,7 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.Path
+import android.graphics.Matrix
 import android.graphics.RectF
 import android.graphics.pdf.PdfDocument
 import android.net.Uri
@@ -27,7 +28,8 @@ object PdfEngine {
                     val height = (page.height * factor).toInt().coerceAtLeast(1)
                     Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888).also { bitmap ->
                         bitmap.eraseColor(android.graphics.Color.WHITE)
-                        page.render(bitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY)
+                        val matrix = Matrix().apply { setScale(factor, factor) }
+                        page.render(bitmap, null, matrix, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY)
                     }
                 }
             }
