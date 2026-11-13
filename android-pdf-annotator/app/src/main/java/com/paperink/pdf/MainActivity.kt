@@ -88,6 +88,8 @@ private fun PaperInkApp(db: AnnotationDatabase) {
     var noteText by remember { mutableStateOf("") }
     var markerEditColor by remember { mutableIntStateOf(0xFFFFC107.toInt()) }
     var selectedId by remember { mutableStateOf<String?>(null) }
+    var showCustomColor by remember { mutableStateOf(false) }
+    var customHex by remember { mutableStateOf("#356B5D") }
     var scale by remember { mutableFloatStateOf(1f) }
     var pan by remember { mutableStateOf(Offset.Zero) }
     var draft by remember { mutableStateOf<List<InkPoint>>(emptyList()) }
@@ -182,6 +184,7 @@ private fun PaperInkApp(db: AnnotationDatabase) {
                                 }
                             })
                         }
+                        TextButton(onClick = { showCustomColor = true }) { Text("Custom", fontSize = 11.sp) }
                         Text("Width", fontSize = 11.sp)
                         Slider(value = width, onValueChange = { width = it }, valueRange = .0015f.. .018f, modifier = Modifier.width(100.dp))
                         if (tool == "HIGHLIGHT") {
@@ -388,6 +391,21 @@ private fun PaperInkApp(db: AnnotationDatabase) {
                 }) { Text("Save") }
             },
             dismissButton = { TextButton(onClick = { markerNoteTarget = null }) { Text("Cancel") } }
+        )
+    }
+
+    if (showCustomColor) {
+        AlertDialog(
+            onDismissRequest = { showCustomColor = false },
+            title = { Text("Custom color") },
+            text = { TextField(value = customHex, onValueChange = { customHex = it }, label = { Text("#RRGGBB") }, singleLine = true) },
+            confirmButton = {
+                TextButton(onClick = {
+                    runCatching { color = android.graphics.Color.parseColor(if (customHex.startsWith("#")) customHex else "#$customHex") }
+                    showCustomColor = false
+                }) { Text("Apply") }
+            },
+            dismissButton = { TextButton(onClick = { showCustomColor = false }) { Text("Cancel") } }
         )
     }
 
