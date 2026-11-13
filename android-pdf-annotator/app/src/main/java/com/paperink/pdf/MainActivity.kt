@@ -194,7 +194,7 @@ private fun PaperInkApp(db: AnnotationDatabase, darkTheme: Boolean, onToggleThem
                                 color = chosen
                                 pageRows.firstOrNull { it.id == selectedId }?.let { row ->
                                     val obj = runCatching { InkObject.fromJson(row.payload) }.getOrNull()
-                                    if (obj != null) { saveSnapshot(); deleteRow(row); persist(obj.copy(color = chosen)) }
+                                    if (obj != null) { saveSnapshot(); scope.launch(Dispatchers.IO) { db.annotations().upsert(row.copy(payload = obj.copy(color = chosen).toJson())) } }
                                 }
                             })
                         }
@@ -288,8 +288,10 @@ private fun PaperInkApp(db: AnnotationDatabase, darkTheme: Boolean, onToggleThem
                                                             val moved = if (resizeEndpoint && obj.points.size >= 2) {
                                                                 obj.points.dropLast(1) + AnnotationGeometry.normalized(draft.last().x, draft.last().y)
                                                             } else obj.points.map { AnnotationGeometry.normalized(it.x + dx, it.y + dy) }
-                                                            saveSnapshot(); deleteRow(target)
-                                                            persist(obj.copy(points = moved))
+                                                            saveSnapshot()
+                                                            scope.launch(Dispatchers.IO) {
+                                                                db.annotations().upsert(target.copy(payload = obj.copy(points = moved).toJson()))
+                                                            }
                                                         }
                                                     }
                                                 }
