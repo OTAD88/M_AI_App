@@ -13,7 +13,7 @@ class AnnotationGeometryTest {
     @Test fun eraserSplitsAFreehandStrokeInsteadOfCoveringPdfContent() {
         val points = (1..9).map { InkPoint(it / 10f, .5f) }
         val stroke = InkObject("stroke", "PEN", points, 0xff000000.toInt(), .01f)
-        val fragments = AnnotationGeometry.erase(stroke, listOf(InkPoint(.5f, .5f)), .12f)
+        val fragments = AnnotationGeometry.erase(stroke, listOf(InkPoint(.5f, .5f)), .06f)
         assertEquals(2, fragments.size)
         assertEquals(listOf(points.first(), points[1], points[2]), fragments.first().points)
         assertEquals(listOf(points[6], points[7], points[8]), fragments.last().points)
