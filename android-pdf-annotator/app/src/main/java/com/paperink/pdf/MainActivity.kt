@@ -48,6 +48,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.paperink.pdf.data.*
+import com.paperink.pdf.ui.graphicsLayerCompat
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -324,7 +325,7 @@ private fun PaperInkApp(db: AnnotationDatabase) {
                     items(markerRows) { row ->
                         val obj = runCatching { InkObject.fromJson(row.payload) }.getOrNull()
                         Row(Modifier.fillMaxWidth().padding(vertical = 5.dp), verticalAlignment = Alignment.CenterVertically) {
-                            Box(Modifier.size(13.dp).background(Color(obj?.color ?: 0xFFFFC107), RoundedCornerShape(3.dp)))
+                            Box(Modifier.size(13.dp).background(Color(obj?.color ?: 0xFFFFC107.toInt()), RoundedCornerShape(3.dp)))
                             Column(Modifier.weight(1f).padding(start = 8.dp)) {
                                 Text("Page ${row.pageIndex + 1}", fontWeight = FontWeight.SemiBold)
                                 Text(obj?.note?.ifBlank { "No note" } ?: "Marker", fontSize = 12.sp, color = Color.Gray)
