@@ -34,7 +34,9 @@ The source PDF is opened read-only via a persisted document URI. Annotations are
 
 ## CI
 
-The repository workflow at `.github/workflows/android.yml` builds and tests this project and uploads the debug APK as an Actions artifact. Version tags also publish a GitHub Release when the workflow succeeds.
+The repository workflow at `.github/workflows/android.yml` builds and tests this project and uploads the debug APK as an Actions artifact. Version tags also build a release APK and publish a GitHub Release when the workflow succeeds.
+
+Optional release signing uses GitHub Actions secrets: ANDROID_KEYSTORE_BASE64, ANDROID_KEYSTORE_PASSWORD, ANDROID_KEY_ALIAS, and ANDROID_KEY_PASSWORD. Without these secrets, the release variant falls back to the standard debug signing key; no private signing material is committed.
 
 ## Known limitations in this initial implementation
 
