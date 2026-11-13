@@ -262,15 +262,26 @@ private fun PaperInkApp(db: AnnotationDatabase, darkTheme: Boolean, onToggleThem
                                         if (draft.isNotEmpty()) {
                                             when (tool) {
                                                 "ERASER" -> {
-                                                    saveSnapshot()
-                                                    val hit = draft.any { p -> pageRows.any { row ->
+                                                    val changes = pageRows.mapNotNull { row ->
                                                         val obj = runCatching { InkObject.fromJson(row.payload) }.getOrNull()
-                                                        obj != null && obj.kind != "MARKER" && AnnotationGeometry.hitTest(obj, p, .025f)
-                                                    } }
-                                                    if (hit) pageRows.filter { row ->
-                                                        val obj = runCatching { InkObject.fromJson(row.payload) }.getOrNull()
-                                                        obj != null && obj.kind != "MARKER" && draft.any { p -> AnnotationGeometry.hitTest(obj, p, .025f) }
-                                                    }.forEach(::deleteRow)
+                                                        if (obj == null || obj.kind == "MARKER") null
+                                                        else {
+                                                            val kept = AnnotationGeometry.erase(obj, draft, .025f)
+                                                            if (kept.size == 1 && kept.first().points == obj.points) null else row to kept
+                                                        }
+                                                    }
+                                                    if (changes.isNotEmpty()) {
+                                                        saveSnapshot()
+                                                        val documentUri = uri.toString()
+                                                        scope.launch(Dispatchers.IO) {
+                                                            changes.forEach { (row, kept) ->
+                                                                db.annotations().delete(documentUri, row.id)
+                                                                kept.forEach { fragment ->
+                                                                    db.annotations().upsert(row.copy(id = fragment.id, payload = fragment.toJson()))
+                                                                }
+                                                            }
+                                                        }
+                                                    }
                                                 }
                                                 "SELECT" -> {
                                                     val start = draft.first()
