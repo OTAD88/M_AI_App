@@ -1,7 +1,7 @@
 name: Build UI Motion Lab APK
 on:
   push:
-    branches: [native-pdf-annotator]
+    branches: [main, native-pdf-annotator]
     paths:
       - "motion-lab/**"
       - ".github/workflows/motion-lab.yml"
