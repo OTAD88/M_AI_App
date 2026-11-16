@@ -2,118 +2,137 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<meta name="theme-color" content="#0d1619">
-<title>UI Motion Lab</title>
+<meta name="theme-color" content="#0d1619"><title>UI Motion Lab — 300+ Motions</title>
 <style>
 :root{color-scheme:dark;--bg:#0d1619;--panel:#142226;--card:#192a2e;--line:#294047;--text:#edf5f2;--muted:#9db0ad;--teal:#75ae9d;--teal2:#a5d4c5}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",sans-serif}
-.app{max-width:760px;margin:auto;padding:18px 15px 34px}
-header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px}
+.app{max-width:900px;margin:auto;padding:17px 14px 36px}header{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:16px}
 .brand{display:flex;align-items:center;gap:11px}.logo{width:43px;height:43px;border-radius:14px;background:linear-gradient(145deg,#9acdbb,#477f70);display:grid;place-items:center;color:#10211d;font-size:22px;font-weight:900}
-h1{font-size:19px;margin:0;font-weight:800}.sub{font-size:11px;color:var(--muted);margin-top:3px}
-.pill{border:1px solid var(--line);background:var(--panel);border-radius:99px;padding:7px 10px;color:var(--teal2);font-size:11px}
-.section-title{font-size:13px;font-weight:750;margin:18px 2px 9px;display:flex;justify-content:space-between;align-items:center}
-.preview{background:radial-gradient(ellipse at 50% 15%,#28453f 0%,#17292c 52%,#142226 100%);border:1px solid #34514b;border-radius:22px;min-height:245px;padding:17px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+h1{font-size:18px;margin:0;font-weight:800}.sub{font-size:10px;color:var(--muted);margin-top:3px}.pill{border:1px solid var(--line);background:var(--panel);border-radius:99px;padding:7px 10px;color:var(--teal2);font-size:10px;white-space:nowrap}
+.section-title{font-size:13px;font-weight:750;margin:17px 2px 9px;display:flex;justify-content:space-between;align-items:center;gap:8px}
+.preview{background:radial-gradient(ellipse at 50% 15%,#28453f 0%,#17292c 52%,#142226 100%);border:1px solid #34514b;border-radius:22px;min-height:220px;padding:16px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
 .preview:before,.preview:after{content:"";position:absolute;border:1px solid #75ae9d20;border-radius:50%;width:210px;height:210px;pointer-events:none}.preview:after{width:290px;height:290px}
-.preview-label{position:absolute;top:12px;right:14px;font-size:10px;color:#aac6bc;letter-spacing:.3px}
-.sample{width:min(100%,285px);background:#f4f7f4;color:#20332f;border-radius:17px;padding:13px;box-shadow:0 15px 40px #0006;position:relative;z-index:1;transform-origin:center}
+.preview-label{position:absolute;top:12px;right:14px;font-size:10px;color:#aac6bc}
+.sample{width:min(100%,300px);background:#f4f7f4;color:#20332f;border-radius:17px;padding:14px;box-shadow:0 15px 40px #0006;position:relative;z-index:1;transform-origin:center}
 .sample-head{display:flex;align-items:center;gap:9px}.avatar{width:34px;height:34px;border-radius:12px;background:#d5e9df;color:#356b59;display:grid;place-items:center;font-weight:800}
-.sample-name{font-size:12px;font-weight:800}.sample-caption{font-size:9px;color:#778b83;margin-top:2px}
-.sample-dots{margin-right:auto;color:#668277;font-size:18px}
-.sample-body{font-size:11px;line-height:1.7;margin:12px 0;color:#40544d}
-.sample-actions{display:flex;gap:7px}.sample-btn{border-radius:8px;background:#e2eee8;padding:7px 10px;color:#376653;font-size:9px;font-weight:750}.sample-btn.primary{background:#75ae9d;color:#10251e}
+.sample-name{font-size:12px;font-weight:800}.sample-caption{font-size:9px;color:#778b83;margin-top:2px}.sample-dots{margin-right:auto;color:#668277;font-size:18px}
+.sample-body{font-size:11px;line-height:1.7;margin:12px 0;color:#40544d}.sample-actions{display:flex;gap:7px}.sample-btn{border-radius:8px;background:#e2eee8;padding:7px 10px;color:#376653;font-size:9px;font-weight:750}.sample-btn.primary{background:#75ae9d;color:#10251e}
 .preview-footer{position:absolute;bottom:11px;left:13px;font-size:9px;color:#a7c1b7}
-.current{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:12px;background:var(--panel);border:1px solid var(--line);padding:11px 13px;border-radius:14px}
-.current-name{font-size:14px;font-weight:800}.current-en{font-size:11px;color:var(--muted);margin-top:3px;direction:ltr;text-align:right}
-.controls{display:flex;gap:7px}.ctl{border:1px solid var(--line);background:#1b3033;color:var(--text);border-radius:10px;padding:9px 11px;font-size:11px;min-height:38px}
-.ctl:active,.option:active{transform:scale(.97)}
-.speed{display:flex;align-items:center;gap:10px;background:var(--panel);border:1px solid var(--line);padding:10px 12px;border-radius:13px;margin-top:9px;font-size:11px;color:var(--muted)}
-input[type=range]{flex:1;accent-color:var(--teal);min-width:70px}
+.current{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:10px;background:var(--panel);border:1px solid var(--line);padding:10px 12px;border-radius:14px}
+.current-name{font-size:13px;font-weight:800}.current-en{font-size:10px;color:var(--muted);margin-top:3px;direction:ltr;text-align:right}
+.controls{display:flex;gap:6px}.ctl{border:1px solid var(--line);background:#1b3033;color:var(--text);border-radius:10px;padding:8px 10px;font-size:10px;min-height:38px}
+.speed{display:flex;align-items:center;gap:10px;background:var(--panel);border:1px solid var(--line);padding:9px 12px;border-radius:13px;margin-top:8px;font-size:10px;color:var(--muted)}
+input[type=range]{flex:1;accent-color:var(--teal);min-width:60px}
+.search{width:100%;background:var(--panel);border:1px solid var(--line);border-radius:12px;color:var(--text);padding:12px;font:inherit;font-size:12px;outline:none}.search:focus{border-color:var(--teal)}
 .categories{display:flex;gap:7px;overflow-x:auto;padding:2px 0 8px;scrollbar-width:none}.categories::-webkit-scrollbar{display:none}
-.cat{white-space:nowrap;background:var(--panel);border:1px solid var(--line);color:var(--muted);border-radius:99px;padding:9px 12px;font-size:11px}
-.cat.active{background:#29483f;border-color:#75ae9d;color:#d7f2e7;font-weight:800}
-.options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
-.option{background:var(--card);border:1px solid var(--line);border-radius:12px;color:var(--text);padding:11px 10px;text-align:right;min-height:56px}
-.option.active{border-color:var(--teal);background:#203b35;box-shadow:inset 0 0 0 1px #75ae9d30}
-.option strong{display:block;font-size:12px}.option small{display:block;color:var(--muted);font-size:10px;margin-top:4px}
-.copyrow{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:13px;padding:11px 12px;border:1px solid var(--line);border-radius:12px;background:var(--panel)}
-.copyname{font-size:12px;direction:ltr}.copy{background:#75ae9d;color:#10231e;border:0;border-radius:9px;padding:9px 12px;font-weight:800;font-size:11px}
-.note{font-size:10px;color:var(--muted);text-align:center;margin-top:17px;line-height:1.7}
-@keyframes fade{0%{opacity:0}100%{opacity:1}}
-@keyframes fadeout{0%{opacity:1}100%{opacity:0}}
-@keyframes slidein{0%{transform:translateX(120px);opacity:0}100%{transform:translateX(0);opacity:1}}
-@keyframes slideleft{0%{transform:translateX(-120px);opacity:0}100%{transform:translateX(0);opacity:1}}
-@keyframes slideup{0%{transform:translateY(100px);opacity:0}100%{transform:translateY(0);opacity:1}}
-@keyframes slidedown{0%{transform:translateY(-100px);opacity:0}100%{transform:translateY(0);opacity:1}}
-@keyframes zoomin{0%{transform:scale(.12);opacity:0}100%{transform:scale(1);opacity:1}}
-@keyframes zoomout{0%{transform:scale(1.8);opacity:0}100%{transform:scale(1);opacity:1}}
-@keyframes scalein{0%{transform:scale(.2)}75%{transform:scale(1.08)}100%{transform:scale(1)}}
-@keyframes rotate{to{transform:rotate(360deg)}}
-@keyframes flip{0%{transform:perspective(500px) rotateY(0)}100%{transform:perspective(500px) rotateY(360deg)}}
-@keyframes flipx{0%{transform:perspective(500px) rotateX(0)}100%{transform:perspective(500px) rotateX(360deg)}}
-@keyframes bounce{0%,100%{transform:translateY(0)}35%{transform:translateY(-65px)}60%{transform:translateY(0)}80%{transform:translateY(-18px)}}
-@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.09)}}
-@keyframes heartbeat{0%,100%{transform:scale(1)}15%{transform:scale(1.12)}30%{transform:scale(1)}45%{transform:scale(1.1)}60%{transform:scale(1)}}
-@keyframes shake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-12px)}40%,80%{transform:translateX(12px)}}
-@keyframes wobble{0%,100%{transform:rotate(0)}25%{transform:rotate(-5deg)}50%{transform:rotate(4deg)}75%{transform:rotate(-3deg)}}
-@keyframes swing{0%,100%{transform:rotate(0);transform-origin:top center}25%{transform:rotate(8deg);transform-origin:top center}75%{transform:rotate(-8deg);transform-origin:top center}}
-@keyframes rubber{0%,100%{transform:scale(1)}30%{transform:scaleX(1.12) scaleY(.88)}60%{transform:scaleX(.92) scaleY(1.1)}}
-@keyframes float{0%,100%{transform:translateY(9px)}50%{transform:translateY(-12px)}}
-@keyframes morph{0%,100%{border-radius:17px}50%{border-radius:45px;transform:rotate(3deg)}}
-@keyframes tilt{0%,100%{transform:perspective(500px) rotateY(-7deg) rotateX(4deg)}50%{transform:perspective(500px) rotateY(7deg) rotateX(-4deg)}}
-@keyframes blur{0%,100%{filter:blur(5px);opacity:.5}50%{filter:blur(0);opacity:1}}
-@keyframes shimmer{0%,100%{filter:brightness(.8)}50%{filter:brightness(1.25)}}
-@keyframes ripple{0%{box-shadow:0 0 0 0 #75ae9d90}100%{box-shadow:0 0 0 28px #75ae9d00}}
-@keyframes rubberband{0%,100%{transform:scale(1)}25%{transform:scaleX(1.16) scaleY(.84)}50%{transform:scaleX(.86) scaleY(1.14)}75%{transform:scaleX(1.08) scaleY(.92)}}
-@keyframes stagger{0%,100%{transform:translateY(15px);opacity:.3}50%{transform:translateY(0);opacity:1}}
-@keyframes reveal{0%{clip-path:inset(0 100% 0 0)}100%{clip-path:inset(0 0 0 0)}}
-@keyframes dropdown{0%{transform:translateY(-22px) scaleY(.5);opacity:0}100%{transform:translateY(0) scaleY(1);opacity:1}}
-@keyframes accordion{0%{transform:scaleY(.1);opacity:0}100%{transform:scaleY(1);opacity:1}}
-@keyframes drawer{0%{transform:translateX(80px);opacity:0}100%{transform:translateX(0);opacity:1}}
-@keyframes parallax{0%,100%{transform:translate(-8px,-5px)}50%{transform:translate(8px,5px)}}
-@keyframes blink{0%,45%,100%{opacity:1}50%,95%{opacity:.15}}
-@media(min-width:600px){.options{grid-template-columns:repeat(3,minmax(0,1fr))}.app{padding:24px}}
-</style>
-</head>
-<body>
-<div class="app">
-<header><div class="brand"><div class="logo">M</div><div><h1>مختبر حركات الواجهات</h1><div class="sub">UI MOTION LAB · OFFLINE</div></div></div><span class="pill">● يعمل دون إنترنت</span></header>
-<div class="section-title"><span>معاينة الواجهة</span><span id="motionCount" class="sub">40+ حركة</span></div>
-<div class="preview" id="preview"><div class="preview-label">LIVE PREVIEW</div>
-<div class="sample" id="sample">
-<div class="sample-head"><div class="avatar">ن</div><div><div class="sample-name">واجهة تجريبية</div><div class="sample-caption">عنصر واجهة مستخدم · UI Component</div></div><div class="sample-dots">⋯</div></div>
-<div class="sample-body">هذه بطاقة تجريبية لمعاينة تأثير الحركة على عناصر الواجهة. اختر حركة من القائمة بالأسفل.</div>
-<div class="sample-actions"><span class="sample-btn primary">استكشاف</span><span class="sample-btn">تفاصيل</span></div>
-</div><div class="preview-footer">SAMPLE COMPONENT</div></div>
-<div class="current"><div><div class="current-name" id="currentAr">التلاشي والظهور</div><div class="current-en" id="currentEn">Fade In</div></div><div class="controls"><button class="ctl" id="replay">↻ إعادة</button><button class="ctl" id="pause">Ⅱ إيقاف</button></div></div>
-<div class="speed"><span>السرعة</span><input id="speed" type="range" min=".35" max="2.5" step=".05" value="1"><span id="speedValue">1×</span></div>
-<div class="section-title"><span>تصنيفات الحركات</span><span class="sub">اضغط لاختيار الحركة</span></div>
-<div class="categories" id="categories"></div>
-<div class="section-title"><span>الحركات المتاحة</span><span class="sub" id="categoryCount"></span></div>
-<div class="options" id="options"></div>
-<div class="copyrow"><span class="copyname" id="copyText">Fade In</span><button class="copy" id="copy">نسخ الاسم الإنجليزي</button></div>
-<div class="note">كل الحركات تعمل محلياً داخل التطبيق. لا يوجد اتصال بالإنترنت أو تحميل خارجي.</div>
-</div>
+.cat{white-space:nowrap;background:var(--panel);border:1px solid var(--line);color:var(--muted);border-radius:99px;padding:9px 12px;font-size:10px}.cat.active{background:#29483f;border-color:#75ae9d;color:#d7f2e7;font-weight:800}
+.options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.option{background:var(--card);border:1px solid var(--line);border-radius:12px;color:var(--text);padding:10px;text-align:right;min-height:59px;transition:border-color .15s,background .15s}
+.option.active{border-color:var(--teal);background:#203b35;box-shadow:inset 0 0 0 1px #75ae9d30}.option strong{display:block;font-size:11px}.option small{display:block;color:var(--muted);font-size:9px;margin-top:4px;direction:ltr;text-align:right}
+.copyrow{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:12px;padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:var(--panel)}
+.copyname{font-size:11px;direction:ltr;overflow-wrap:anywhere}.copy{background:#75ae9d;color:#10231e;border:0;border-radius:9px;padding:9px 12px;font-weight:800;font-size:10px;white-space:nowrap}
+.note{font-size:10px;color:var(--muted);text-align:center;margin-top:16px;line-height:1.7}
+@media(min-width:620px){.options{grid-template-columns:repeat(3,minmax(0,1fr))}.app{padding:22px}.preview{min-height:250px}}
+@media(min-width:850px){.options{grid-template-columns:repeat(4,minmax(0,1fr))}}
+</style></head>
+<body><main class="app">
+<header><div class="brand"><div class="logo">M</div><div><h1>مختبر حركات الواجهات</h1><div class="sub">UI MOTION LAB · 300+ OFFLINE ANIMATIONS</div></div></div><span class="pill">● يعمل دون إنترنت</span></header>
+<div class="section-title"><span>معاينة الحركة</span><span id="total" class="sub">300 حركة</span></div>
+<div class="preview"><div class="preview-label">LIVE PREVIEW</div><div class="sample" id="sample">
+<div class="sample-head"><div class="avatar">M</div><div><div class="sample-name">عنصر واجهة تجريبي</div><div class="sample-caption">UI COMPONENT · LIVE DEMO</div></div><div class="sample-dots">⋯</div></div>
+<div class="sample-body">اختر أي حركة من المكتبة لمشاهدة تأثيرها مباشرة على هذا العنصر.</div>
+<div class="sample-actions"><span class="sample-btn primary">استكشاف</span><span class="sample-btn">تفاصيل</span></div></div><div class="preview-footer">MOTION PREVIEW</div></div>
+<div class="current"><div><div class="current-name" id="arName">التلاشي والظهور</div><div class="current-en" id="enName">Fade In 01</div></div><div class="controls"><button class="ctl" id="replay">↻ إعادة</button><button class="ctl" id="pause">Ⅱ إيقاف</button></div></div>
+<div class="speed"><span>سرعة الحركة</span><input id="speed" type="range" min=".25" max="2.5" step=".05" value="1"><span id="speedVal">1×</span></div>
+<div class="section-title"><span>ابحث عن حركة</span><span class="sub">عربي أو English</span></div><input class="search" id="search" placeholder="ابحث: دوران، انتقال، Morph، Glow..." autocomplete="off">
+<div class="section-title"><span>تصنيفات الحركات</span><span class="sub" id="shown">300 حركة</span></div><div class="categories" id="categories"></div>
+<div class="section-title"><span>مكتبة الحركات</span><span class="sub" id="count"></span></div><div class="options" id="options"></div>
+<div class="copyrow"><span class="copyname" id="copyName">fade-in-01</span><button class="copy" id="copy">نسخ اسم الحركة</button></div>
+<div class="note">مكتبة محلية بالكامل — لا تحتاج إلى إنترنت أو صلاحيات خاصة. جميع المعاينات تُنفّذ داخل التطبيق.</div>
+</main>
 <script>
 (()=>{
-const groups=[
-{name:"الظهور والدخول",items:[["Fade In","التلاشي والظهور","fade"],["Fade Out","الاختفاء التدريجي","fadeout"],["Slide In","الانزلاق للداخل","slidein"],["Slide Left","الانزلاق من اليسار","slideleft"],["Slide Up","الصعود للأعلى","slideup"],["Slide Down","الهبوط للأسفل","slidedown"],["Zoom In","التقريب","zoomin"],["Zoom Out","التبعيد","zoomout"],["Scale In","التكبير التدريجي","scalein"],["Reveal","الكشف التدريجي","reveal"]]},
-{name:"الحركة والدوران",items:[["Rotate","الدوران","rotate"],["Flip","القلب الأفقي ثلاثي الأبعاد","flip"],["Flip X","القلب العمودي ثلاثي الأبعاد","flipx"],["Bounce","الارتداد","bounce"],["Swing","التأرجح","swing"],["Wobble","التمايل","wobble"],["Float","الطفو","float"],["3D Tilt","الميلان ثلاثي الأبعاد","tilt"],["Parallax","اختلاف العمق","parallax"]]},
-{name:"التفاعل والانتباه",items:[["Pulse","النبض","pulse"],["Heartbeat","نبض القلب","heartbeat"],["Shake","الاهتزاز","shake"],["Rubber Band","التمدد المطاطي","rubber"],["Rubberband","الانضغاط والتمدد","rubberband"],["Ripple Effect","تأثير التموج","ripple"],["Blink","الوميض","blink"],["Hover Effect","تأثير التحويم","pulse"],["Press Animation","حركة الضغط","scalein"]]},
-{name:"القوائم والنوافذ",items:[["Drawer Animation","حركة القائمة الجانبية","drawer"],["Dropdown Animation","القائمة المنسدلة","dropdown"],["Accordion","الفتح والإغلاق المتدرج","accordion"],["Modal Animation","حركة النافذة المنبثقة","zoomin"],["Bottom Sheet","اللوحة السفلية","slideup"],["Stagger Animation","ظهور العناصر بالتتابع","stagger"]]},
-{name:"المؤثرات المتقدمة",items:[["Morphing","تحول الشكل","morph"],["Blur Transition","انتقال الضبابية","blur"],["Shimmer Effect","تأثير اللمعان","shimmer"],["Skeleton Loading","التحميل الهيكلي","shimmer"],["Card Hover","تأثير البطاقة","tilt"],["Page Transition","انتقال الصفحات","slidein"]]}
+const families=[
+["الدخول والظهور","Entrances",["Fade In","التلاشي والظهور"],"fade"],
+["الاختفاء والخروج","Exits",["Fade Out","الاختفاء التدريجي"],"fadeout"],
+["الانزلاق الأفقي","Horizontal Slides",["Slide Right","الانزلاق لليمين"],"slideR"],
+["الانزلاق العكسي","Reverse Slides",["Slide Left","الانزلاق لليسار"],"slideL"],
+["الحركة العمودية","Vertical Slides",["Slide Up","الصعود للأعلى"],"slideU"],
+["الهبوط العمودي","Down Slides",["Slide Down","الهبوط للأسفل"],"slideD"],
+["التكبير والتقريب","Zoom",["Zoom In","التقريب"],"zoom"],
+["التصغير والتبعيد","Scale Down",["Zoom Out","التبعيد"],"zoomout"],
+["الدوران","Rotation",["Rotate","الدوران"],"rotate"],
+["القلب ثلاثي الأبعاد","3D Flip",["Flip X","القلب الأفقي"],"flipx"],
+["القلب العمودي","Vertical Flip",["Flip Y","القلب العمودي"],"flipy"],
+["الارتداد","Bounce",["Bounce","الارتداد"],"bounce"],
+["النبض","Pulse",["Pulse","النبض"],"pulse"],
+["الاهتزاز","Shake",["Shake","الاهتزاز"],"shake"],
+["التأرجح","Swing",["Swing","التأرجح"],"swing"],
+["الطفو","Floating",["Float","الطفو"],"float"],
+["تحوّل الشكل","Shape Morph",["Morph","تحوّل الشكل"],"morph"],
+["الميل والقص","Skew",["Skew","الميل"],"skew"],
+["الضبابية","Blur",["Blur In","الضبابية والوضوح"],"blur"],
+["التوهج","Glow",["Glow","التوهج"],"glow"],
+["الظلال","Shadow",["Shadow","تغيّر الظل"],"shadow"],
+["تغيّر الألوان","Color",["Color Shift","تغيّر اللون"],"color"],
+["الحواف والإطار","Borders",["Border Pulse","نبض الإطار"],"border"],
+["الكشف والمسح","Reveal",["Reveal","الكشف التدريجي"],"reveal"],
+["الكتابة والنصوص","Typography",["Text Motion","حركة النص"],"text"],
+["الحركة المرنة","Elastic",["Elastic","الحركة المرنة"],"elastic"],
+["التمدد المطاطي","Rubber",["Rubber Band","التمدد المطاطي"],"rubber"],
+["الهلام والتشوه","Jello",["Jello","التشوه الهلامي"],"jello"],
+["التدرجات","Gradient",["Gradient Shift","تحرك التدرج"],"gradient"],
+["الحركة ثلاثية الأبعاد","3D Motion",["3D Orbit","مدار ثلاثي الأبعاد"],"orbit"]
 ];
-let active=groups[0].items[0],activeGroup=0,paused=false;
+const variations=["خفيف","متوسط","قوي","سريع","بطيء","ناعم","حاد","متدرج","ديناميكي","سينمائي"];
+const all=[];
+function keyframes(type,i){
+const n=i+1,px=12+n*2,deg=8+n*3,sc=(0.82+(n%5)*.045).toFixed(2),h=(n*31)%360,h2=(h+95)%360;
+switch(type){
+case"fade":return `0%{opacity:0;transform:translateY(${n%2?px:-px}px)}100%{opacity:1;transform:translateY(0)}`;
+case"fadeout":return `0%{opacity:1;transform:scale(1)}100%{opacity:0;transform:scale(${(1-n*.012).toFixed(2)}) translateY(${px}px)}`;
+case"slideR":return `0%{opacity:0;transform:translateX(${px*4}px)}70%{opacity:1;transform:translateX(-${n}px)}100%{transform:translateX(0)}`;
+case"slideL":return `0%{opacity:0;transform:translateX(-${px*4}px)}70%{opacity:1;transform:translateX(${n}px)}100%{transform:translateX(0)}`;
+case"slideU":return `0%{opacity:0;transform:translateY(${px*4}px)}100%{opacity:1;transform:translateY(0)}`;
+case"slideD":return `0%{opacity:0;transform:translateY(-${px*4}px)}100%{opacity:1;transform:translateY(0)}`;
+case"zoom":return `0%{opacity:0;transform:scale(${(.12+n*.025).toFixed(2)})}75%{transform:scale(1.0${n%4+1})}100%{opacity:1;transform:scale(1)}`;
+case"zoomout":return `0%{opacity:0;transform:scale(${(1.5+n*.08).toFixed(2)})}100%{opacity:1;transform:scale(1)}`;
+case"rotate":return `0%{transform:rotate(${deg*3}deg) scale(.85)}100%{transform:rotate(0) scale(1)}`;
+case"flipx":return `0%{transform:perspective(650px) rotateY(${140+n*8}deg);opacity:.2}100%{transform:perspective(650px) rotateY(0);opacity:1}`;
+case"flipy":return `0%{transform:perspective(650px) rotateX(${140+n*8}deg);opacity:.2}100%{transform:perspective(650px) rotateX(0);opacity:1}`;
+case"bounce":return `0%,100%{transform:translateY(0)}35%{transform:translateY(-${30+n*4}px)}60%{transform:translateY(0)}80%{transform:translateY(-${8+n}px)}`;
+case"pulse":return `0%,100%{transform:scale(1)}50%{transform:scale(${(1.03+n*.012).toFixed(2)})}`;
+case"shake":return `0%,100%{transform:translateX(0) rotate(0)}20%,60%{transform:translateX(-${n+5}px) rotate(-${n}deg)}40%,80%{transform:translateX(${n+5}px) rotate(${n}deg)}`;
+case"swing":return `0%,100%{transform:rotate(0);transform-origin:top center}25%{transform:rotate(${deg}deg);transform-origin:top center}75%{transform:rotate(-${deg}deg);transform-origin:top center}`;
+case"float":return `0%,100%{transform:translateY(${n}px)}50%{transform:translateY(-${px}px)}`;
+case"morph":return `0%,100%{border-radius:${10+n}px ${22+n}px ${12+n}px ${25+n}px;transform:rotate(0)}50%{border-radius:${45+n}px ${12+n}px ${38+n}px ${8+n}px;transform:rotate(${n%2?deg:-deg}deg)}`;
+case"skew":return `0%,100%{transform:skew(0)}50%{transform:skew(${deg}deg,${n}deg)}`;
+case"blur":return `0%{filter:blur(${2+n}px);opacity:.3}100%{filter:blur(0);opacity:1}`;
+case"glow":return `0%,100%{filter:drop-shadow(0 0 ${n+2}px hsla(${h},70%,65%,.15))}50%{filter:drop-shadow(0 0 ${n*3+8}px hsla(${h},85%,65%,.9))}`;
+case"shadow":return `0%,100%{box-shadow:0 8px 20px #0003}50%{box-shadow:0 ${n+8}px ${n*4+18}px #0009}`;
+case"color":return `0%{filter:hue-rotate(0deg) saturate(1)}50%{filter:hue-rotate(${h}deg) saturate(1.7)}100%{filter:hue-rotate(0deg) saturate(1)}`;
+case"border":return `0%,100%{outline:1px solid hsla(${h},70%,60%,.2);outline-offset:0}50%{outline:${n%4+2}px solid hsla(${h2},90%,65%,.9);outline-offset:${n+3}px}`;
+case"reveal":return `0%{clip-path:inset(0 100% 0 0);opacity:.3}100%{clip-path:inset(0 0 0 0);opacity:1}`;
+case"text":return `0%{letter-spacing:-${n}px;filter:blur(3px);opacity:0}100%{letter-spacing:0;filter:blur(0);opacity:1}`;
+case"elastic":return `0%{transform:scale(.3)}35%{transform:scale(1.${n%7+1})}55%{transform:scale(.9)}75%{transform:scale(1.0${n%4+1})}100%{transform:scale(1)}`;
+case"rubber":return `0%,100%{transform:scale(1)}30%{transform:scaleX(${(1.08+n*.012).toFixed(2)}) scaleY(.8)}60%{transform:scaleX(.88) scaleY(${(1.08+n*.012).toFixed(2)})}`;
+case"jello":return `0%,100%{transform:skew(0)}22%{transform:skew(${deg}deg,${-deg}deg)}44%{transform:skew(-${deg}deg,-${deg/2}deg)}66%{transform:skew(${deg/2}deg,0)}88%{transform:skew(-${n}deg,0)}`;
+case"gradient":return `0%,100%{filter:hue-rotate(0deg) brightness(1)}50%{filter:hue-rotate(${h}deg) brightness(1.2)}`;
+case"orbit":return `0%{transform:perspective(700px) rotateY(-${deg}deg) rotateX(${n*2}deg) translateZ(-${n}px)}50%{transform:perspective(700px) rotateY(${deg}deg) rotateX(-${n*2}deg) translateZ(${n}px)}100%{transform:perspective(700px) rotateY(-${deg}deg) rotateX(${n*2}deg) translateZ(-${n}px)}`;
+}
+}
+families.forEach((f,fi)=>{for(let i=0;i<10;i++){const num=String(i+1).padStart(2,"0"),slug=f[3]+"-"+num;all.push({id:all.length,name:f[2][0]+" "+num,ar:f[2][1]+" — "+variations[i],slug,group:fi,category:f[0],css:slug});}});
+const style=document.createElement("style");style.textContent=all.map((a)=>"@keyframes "+a.css+"{"+keyframes(families[a.group][3],Number(a.name.slice(-2))-1)+"}").join("\n");document.head.appendChild(style);
+let active=all[0],activeGroup=-1,paused=false,query="";
 const $=id=>document.getElementById(id),sample=$("sample");
-function play(item){active=item;paused=false;$("pause").textContent="Ⅱ إيقاف";$("currentAr").textContent=item[1];$("currentEn").textContent=item[0];$("copyText").textContent=item[0];sample.style.animation="none";void sample.offsetWidth;sample.style.animation=item[2]+" "+(0.8/Number($("speed").value))+"s ease-in-out 1 both";renderOptions();}
-function renderCategories(){const box=$("categories");box.innerHTML="";groups.forEach((g,i)=>{const b=document.createElement("button");b.className="cat"+(i===activeGroup?" active":"");b.textContent=g.name;b.onclick=()=>{activeGroup=i;renderCategories();renderOptions();};box.appendChild(b);});}
-function renderOptions(){const box=$("options");box.innerHTML="";const list=groups[activeGroup].items;$("categoryCount").textContent=list.length+" حركة";list.forEach(item=>{const b=document.createElement("button");b.className="option"+(item===active?" active":"");b.innerHTML="<strong></strong><small></small>";b.children[0].textContent=item[0];b.children[1].textContent=item[1];b.onclick=()=>play(item);box.appendChild(b);});}
+function play(a){active=a;paused=false;$("pause").textContent="Ⅱ إيقاف";$("arName").textContent=a.ar;$("enName").textContent=a.name;$("copyName").textContent=a.slug;sample.style.animation="none";void sample.offsetWidth;sample.style.animation=a.css+" "+(1/Number($("speed").value))+"s cubic-bezier(.2,.75,.25,1) 1 both";renderOptions();}
+function filtered(){return all.filter(a=>(activeGroup<0||a.group===activeGroup)&&(!query||(a.name+" "+a.ar+" "+a.slug+" "+a.category).toLowerCase().includes(query.toLowerCase())));}
+function renderCategories(){const box=$("categories");box.innerHTML="";const entries=[["الكل",-1],...families.map((f,i)=>[f[0],i])];entries.forEach(([name,id])=>{const b=document.createElement("button");b.className="cat"+(id===activeGroup?" active":"");b.textContent=name;b.onclick=()=>{activeGroup=id;renderCategories();renderOptions();};box.appendChild(b);});}
+function renderOptions(){const list=filtered(),box=$("options");box.innerHTML="";$("count").textContent=list.length+" / "+all.length+" حركة";$("shown").textContent=all.length+" حركة";list.forEach(a=>{const b=document.createElement("button");b.className="option"+(a.id===active.id?" active":"");const strong=document.createElement("strong"),small=document.createElement("small");strong.textContent=a.ar;small.textContent=a.name+" · "+a.slug;b.append(strong,small);b.onclick=()=>play(a);box.appendChild(b);});}
 $("replay").onclick=()=>play(active);
 $("pause").onclick=()=>{paused=!paused;sample.style.animationPlayState=paused?"paused":"running";$("pause").textContent=paused?"▶ متابعة":"Ⅱ إيقاف";};
-$("speed").oninput=e=>{$("speedValue").textContent=Number(e.target.value).toFixed(2).replace(/0+$/,"").replace(/\.$/,"")+"×";if(!paused)play(active);};
-$("copy").onclick=()=>{const t=active[0],el=document.createElement("textarea");el.value=t;document.body.appendChild(el);el.select();try{document.execCommand("copy");$("copy").textContent="✓ تم النسخ";}catch(e){$("copy").textContent="حدد الاسم وانسخه";}el.remove();setTimeout(()=>$("copy").textContent="نسخ الاسم الإنجليزي",1400);};
-$("motionCount").textContent=groups.reduce((n,g)=>n+g.items.length,0)+" حركة";
-renderCategories();play(active);
+$("speed").oninput=e=>{$("speedVal").textContent=Number(e.target.value).toFixed(2).replace(/0+$/,"").replace(/\.$/,"")+"×";if(!paused)play(active);};
+$("search").oninput=e=>{query=e.target.value;renderOptions();};
+$("copy").onclick=()=>{const t=active.slug,el=document.createElement("textarea");el.value=t;document.body.appendChild(el);el.select();try{document.execCommand("copy");$("copy").textContent="✓ تم النسخ";}catch(e){$("copy").textContent="تعذر النسخ";}el.remove();setTimeout(()=>$("copy").textContent="نسخ اسم الحركة",1300);};
+$("total").textContent=all.length+" حركة";renderCategories();play(active);
 })();
-</script>
-</body></html>
+</script></body></html>
